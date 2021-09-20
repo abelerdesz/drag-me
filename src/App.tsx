@@ -1,14 +1,26 @@
-import { useCallback, useMemo, useState, MouseEvent, ChangeEvent } from 'react';
+import { useCallback, useMemo, useState, useRef, useEffect, MouseEvent, ChangeEvent } from 'react'
 import throttle from 'lodash.throttle'
-import './App.css';
+import classNames from 'classnames'
+import './App.css'
 
 function App() {
   const [dragging, setDragging] = useState(false)
   const [mouseOffset, setMouseOffset] = useState([0, 0])
   const [position, setPosition] = useState([0, 0])
+  const [untouched, setUntouched] = useState(true)
+  const rectangleRef = useRef(null)
 
-  const onChangeX = (event: ChangeEvent<HTMLInputElement>) => setPosition([parseInt(event.target.value), position[1]])
-  const onChangeY = (event: ChangeEvent<HTMLInputElement>) => setPosition([position[0], parseInt(event.target.value)])
+  const onChangeX = (event: ChangeEvent<HTMLInputElement>) => {
+    setUntouched(false)
+    const newPosition = parseInt(event.target.value) || 0
+    setPosition([newPosition, position[1]])
+  }
+
+  const onChangeY = (event: ChangeEvent<HTMLInputElement>) => {
+    setUntouched(false)
+    const newPosition = parseInt(event.target.value) || 0
+    setPosition([position[0], newPosition])
+  }
 
   const onMouseDown = (event: MouseEvent) => {
     const { offsetX, offsetY } = event.nativeEvent
@@ -21,32 +33,48 @@ function App() {
   const onMouseMove = useCallback((event: MouseEvent) => {
     if (dragging) {
       const { clientX, clientY } = event
+      setUntouched(false)
       setPosition([clientX - mouseOffset[0], clientY - mouseOffset[1]])
     }
   }, [dragging, mouseOffset])
 
-  const throttledOnMouseMove = useMemo(() => throttle(onMouseMove, 10), [onMouseMove]) // throttle to 100fps
+  // Throttle to 200fps
+  const throttledOnMouseMove = useMemo(() => throttle(onMouseMove, 10), [onMouseMove])
 
+  // Display starting coordinates
+  useEffect(() => {
+    if (rectangleRef?.current) {
+      const { offsetLeft, offsetTop } = rectangleRef.current
+      setPosition([offsetLeft, offsetTop])
+    }
+  }, [])
+  
+  const rectangleClasses = classNames({
+    'rectangle': true,
+    'rectangle-initial-position': untouched
+  })
   return (
     <div className="App" onMouseUp={onMouseUp} onMouseMove={throttledOnMouseMove}>
-      <header className="App-header">
-        <div className="rectangle" onMouseDown={onMouseDown} style={{
+      <main className="App-main">
+        <div ref= {rectangleRef} className={rectangleClasses} onMouseDown={onMouseDown} style={{
           left: position[0],
           top: position[1]
-        }}></div>
+        }}>Drag me</div>
         <div className="flex-row">
-          <label htmlFor="position-X">
-            X
-          </label>
-          <input type="number" value={position[0]} id="position-X" onChange={onChangeX} />
+          <div className="flex-row mr-1">
+            <label className="mr-1" htmlFor="position-X">
+              X
+            </label>
+            <input type="number" value={position[0]} className="coordinate-input" id="position-X" onChange={onChangeX} />
+          </div>
+          <div className="flex-row">
+            <label className="mr-1" htmlFor="position-Y">
+              Y
+            </label>
+            <input type="number" value={position[1]} className="coordinate-input" id="position-X" onChange={onChangeY} />
+          </div>
         </div>
-        <div className="flex-row">
-          <label htmlFor="position-Y">
-            Y
-          </label>
-          <input type="number" value={position[1]} id="position-X" onChange={onChangeY} />
-        </div>
-      </header>
+      </main>
     </div>
   );
 }

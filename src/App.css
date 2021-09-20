@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  user-select: none;
 }
 
 .App-logo {
@@ -13,8 +14,8 @@
   }
 }
 
-.App-header {
-  background-color: #282c34;
+.App-main {
+  background-color: #2C3E50;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -37,6 +38,10 @@
   }
 }
 
+.mr-1 {
+  margin-right: 1em;
+}
+
 .flex-row {
   display: flex;
 }
@@ -45,8 +50,22 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  width: 10em;
-  height: 5em;
-  background: red;
+  width: 8em;
+  height: 4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #8E44AD;
   cursor: grab;
+  border-radius: 0.2em;
+}
+
+.rectangle-initial-position {
+  top: 25% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+.coordinate-input {
+  font-size: 1em;
 }
