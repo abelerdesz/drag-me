@@ -55,40 +55,38 @@ export default function App() {
   }, [])
 
   return (
-    <div className="App" onMouseUp={onMouseUp} onMouseMove={throttledOnMouseMove}>
-      <main className="App-main">
-        <div
-          ref= {rectangleRef}
-          className={rectangleClasses}
-          onMouseDown={onMouseDown}
-          style={{
-            left: `${position[0]}px`,
-            top: `${position[1]}px`
-          }}>Drag me</div>
-        <div className="flex-row">
-          <div className="flex-row mr-1">
-            <label className="mr-1" htmlFor="position-X">
-              X
-            </label>
-            <input
-              type="number"
-              value={position[0]}
-              className="coordinate-input"
-              id="position-X" onChange={onChangeX} />
-          </div>
-          <div className="flex-row">
-            <label className="mr-1" htmlFor="position-Y">
-              Y
-            </label>
-            <input
-              type="number"
-              value={position[1]}
-              className="coordinate-input"
-              id="position-X"
-              onChange={onChangeY} />
-          </div>
+    <main className="app" onMouseUp={onMouseUp} onMouseMove={throttledOnMouseMove}>
+      <div
+        ref= {rectangleRef}
+        className={rectangleClasses}
+        onMouseDown={onMouseDown}
+        style={{
+          left: `${position[0]}px`,
+          top: `${position[1]}px`
+        }}>Drag me</div>
+      <div className="flex-row">
+        <div className="flex-row mr-1">
+          <label className="mr-1" htmlFor="position-X">
+            X
+          </label>
+          <input
+            type="number"
+            value={position[0]}
+            className="coordinate-input"
+            id="position-X" onChange={onChangeX} />
         </div>
-      </main>
-    </div>
+        <div className="flex-row">
+          <label className="mr-1" htmlFor="position-Y">
+            Y
+          </label>
+          <input
+            type="number"
+            value={position[1]}
+            className="coordinate-input"
+            id="position-X"
+            onChange={onChangeY} />
+        </div>
+      </div>
+    </main>
   )
 }
