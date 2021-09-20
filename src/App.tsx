@@ -3,12 +3,17 @@ import throttle from 'lodash.throttle'
 import classNames from 'classnames'
 import './App.css'
 
-function App() {
+export default function App() {
   const [dragging, setDragging] = useState(false)
-  const [mouseOffset, setMouseOffset] = useState([0, 0])
-  const [position, setPosition] = useState([0, 0])
   const [untouched, setUntouched] = useState(true)
+  const [position, setPosition] = useState([0, 0])
+  const [mouseOffset, setMouseOffset] = useState([0, 0])
   const rectangleRef = useRef(null)
+
+  const rectangleClasses = classNames({
+    'rectangle': true,
+    'rectangle-initial-position': untouched
+  })
 
   const onChangeX = (event: ChangeEvent<HTMLInputElement>) => {
     setUntouched(false)
@@ -41,42 +46,49 @@ function App() {
   // Throttle to 200fps
   const throttledOnMouseMove = useMemo(() => throttle(onMouseMove, 10), [onMouseMove])
 
-  // Display starting coordinates
+  // Display starting coordinates when component is mounted
   useEffect(() => {
     if (rectangleRef?.current) {
       const { offsetLeft, offsetTop } = rectangleRef.current
       setPosition([offsetLeft, offsetTop])
     }
   }, [])
-  
-  const rectangleClasses = classNames({
-    'rectangle': true,
-    'rectangle-initial-position': untouched
-  })
+
   return (
     <div className="App" onMouseUp={onMouseUp} onMouseMove={throttledOnMouseMove}>
       <main className="App-main">
-        <div ref= {rectangleRef} className={rectangleClasses} onMouseDown={onMouseDown} style={{
-          left: position[0],
-          top: position[1]
-        }}>Drag me</div>
+        <div
+          ref= {rectangleRef}
+          className={rectangleClasses}
+          onMouseDown={onMouseDown}
+          style={{
+            left: `${position[0]}px`,
+            top: `${position[1]}px`
+          }}>Drag me</div>
         <div className="flex-row">
           <div className="flex-row mr-1">
             <label className="mr-1" htmlFor="position-X">
               X
             </label>
-            <input type="number" value={position[0]} className="coordinate-input" id="position-X" onChange={onChangeX} />
+            <input
+              type="number"
+              value={position[0]}
+              className="coordinate-input"
+              id="position-X" onChange={onChangeX} />
           </div>
           <div className="flex-row">
             <label className="mr-1" htmlFor="position-Y">
               Y
             </label>
-            <input type="number" value={position[1]} className="coordinate-input" id="position-X" onChange={onChangeY} />
+            <input
+              type="number"
+              value={position[1]}
+              className="coordinate-input"
+              id="position-X"
+              onChange={onChangeY} />
           </div>
         </div>
       </main>
     </div>
-  );
+  )
 }
-
-export default App;
