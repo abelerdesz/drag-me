@@ -43,7 +43,7 @@ export default function App() {
     }
   }, [dragging, mouseOffset])
 
-  // Throttle to 200fps
+  // Throttle to 100fps
   const throttledOnMouseMove = useMemo(() => throttle(onMouseMove, 10), [onMouseMove])
 
   // Display starting coordinates when component is mounted
