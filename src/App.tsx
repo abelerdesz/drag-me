@@ -49,8 +49,8 @@ export default function App() {
   // Display starting coordinates when component is mounted
   useEffect(() => {
     if (rectangleRef?.current) {
-      const { offsetLeft, offsetTop } = rectangleRef.current
-      setPosition([offsetLeft, offsetTop])
+      const { offsetLeft, offsetTop, offsetWidth, offsetHeight } = rectangleRef.current
+      setPosition([Math.round(offsetLeft - offsetWidth / 2), Math.round(offsetTop - offsetHeight / 2)])
     }
   }, [])
 
